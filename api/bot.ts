@@ -321,7 +321,26 @@ bot.callbackQuery('how_to_order', async (ctx) => {
 
 // bot.start();
 // const handle = webhookCallback(bot, "https"); // <-- Измените эту строку
-export default webhookCallback(bot, "express");
+// export default webhookCallback(bot, "express");
+
+export default async function handler(req: any, res: any) {
+  // req и res приходят напрямую от Vercel Serverless Function
+  try {
+    // console.log("Получен запрос:", req.method, req.url); // Для отладки
+    // Получаем обработчик webhook с адаптером "express"
+    const handlerFunction = webhookCallback(bot, "express");
+    // Передаем объекты req и res напрямую в обработчик Grammy
+    await handlerFunction(req, res);
+    // console.log("Обработчик Grammy выполнен"); // Для отладки
+  } catch (err) {
+    console.error("Ошибка в обработчике Vercel:", err);
+    // Отправляем ответ об ошибке, если что-то пошло не так до передачи управления Grammy
+    if (!res.headersSent) {
+      res.status(500).send('Internal Server Error');
+    }
+  }
+}
+
 // export default async function handler(request: Request) {
 //   try {
 //     return await handle(request);
