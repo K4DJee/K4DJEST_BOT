@@ -3,7 +3,7 @@ import transporter from './mail';
 
 
 const BOT_DEVELOPER = 1367602882;
-
+const BOT_TOKEN = process.env.BOT_TOKEN!;
 
 interface BotConfig {
     botDeveloper: number;
@@ -14,8 +14,12 @@ type MyContext = Context & {
     config: BotConfig;
   };
 
-const bot = new Bot<MyContext>(process.env.BOT_TOKEN!);
+export const config = {
+  runtime: "edge",
+};
 
+if (!BOT_TOKEN) throw new Error("BOT_TOKEN не установлен");
+const bot = new Bot<MyContext>(BOT_TOKEN);
 
 //additional
 const commands = [
@@ -316,8 +320,17 @@ bot.callbackQuery('how_to_order', async (ctx) => {
 });
 
 // bot.start();
-export default webhookCallback(bot, "https");
+const handle = webhookCallback(bot, "std/http"); // Создаем обработчик
 
+export default async function handler(request: Request) { // Или NextRequest
+  try {
+    // Вызываем обработчик Grammy с объектом Request от Vercel
+    return await handle(request);
+  } catch (err) {
+    console.error(err);
+    return new Response('Internal Server Error', { status: 500 });
+  }
+}
 
 bot.catch((err) => {
     const ctx = err.ctx;

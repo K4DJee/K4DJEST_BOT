@@ -1,8 +1,9 @@
 // mail.ts
-import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
+import * as nodemailer from 'nodemailer';
+// import nodemailer from 'nodemailer';
+// import dotenv from 'dotenv';
 
-dotenv.config();
+// dotenv.config();
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.mail.ru',
