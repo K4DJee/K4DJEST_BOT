@@ -1,7 +1,7 @@
 import {Bot, Context, GrammyError, HttpError, InlineKeyboard, Keyboard, webhookCallback } from 'grammy';
 import transporter from './mail';
 import dotenv from 'dotenv';
-dotenv.config();
+
 
 const BOT_DEVELOPER = 1367602882;
 

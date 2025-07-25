@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const grammy_1 = require("grammy");
 const mail_1 = __importDefault(require("./mail"));
 const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
 const BOT_DEVELOPER = 1367602882;
 const bot = new grammy_1.Bot(process.env.BOT_TOKEN);
 //additional
