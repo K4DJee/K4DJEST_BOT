@@ -15,7 +15,7 @@ type MyContext = Context & {
   };
 
 export const config = {
-  runtime: "edge",
+  runtime: "nodejs22", // или "nodejs18", "nodejs20" - проверьте поддерживаемые версии в документации Vercel
 };
 
 if (!BOT_TOKEN) throw new Error("BOT_TOKEN не установлен");

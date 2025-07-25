@@ -39,11 +39,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.config = void 0;
 exports.default = handler;
 var grammy_1 = require("grammy");
-var mail_1 = require("../build/mail");
+var mail_1 = require("./mail");
 var BOT_DEVELOPER = 1367602882;
 var BOT_TOKEN = process.env.BOT_TOKEN;
 exports.config = {
-    runtime: "edge",
+    runtime: "nodejs22", // или "nodejs18", "nodejs20" - проверьте поддерживаемые версии в документации Vercel
 };
 if (!BOT_TOKEN)
     throw new Error("BOT_TOKEN не установлен");
