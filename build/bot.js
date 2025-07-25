@@ -313,7 +313,7 @@ function handler(request) {
                     _a.trys.push([0, 2, , 3]);
                     return [4 /*yield*/, handle(request)];
                 case 1: 
-                // Вызываем обработчик Grammy с объектом Request от Vercel
+                // Вызываем обработчик Grammy с объектом request
                 return [2 /*return*/, _a.sent()];
                 case 2:
                     err_1 = _a.sent();
