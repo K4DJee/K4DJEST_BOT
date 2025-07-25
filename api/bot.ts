@@ -320,17 +320,17 @@ bot.callbackQuery('how_to_order', async (ctx) => {
 });
 
 // bot.start();
-const handle = webhookCallback(bot, "std/http"); // Создаем обработчик
+// const handle = webhookCallback(bot, "https"); // <-- Измените эту строку
+export default webhookCallback(bot, "std/http");
+// export default async function handler(request: Request) {
+//   try {
+//     return await handle(request);
+//   } catch (err) {
+//     console.error(err);
+//     return new Response('Internal Server Error', { status: 500 });
+//   }
+// }
 
-export default async function handler(request: Request) { // Теперь только один аргумент
-  try {
-    // Вызываем обработчик Grammy с объектом request
-    return await handle(request);
-  } catch (err) {
-    console.error(err);
-    return new Response('Internal Server Error', { status: 500 });
-  }
-}
 
 bot.catch((err) => {
     const ctx = err.ctx;
