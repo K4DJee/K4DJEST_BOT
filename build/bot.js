@@ -37,7 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.config = void 0;
-exports.default = handler;
 var grammy_1 = require("grammy");
 var mail_1 = require("./mail");
 var BOT_DEVELOPER = 1367602882;
@@ -303,27 +302,16 @@ bot.callbackQuery('how_to_order', function (ctx) { return __awaiter(void 0, void
     });
 }); });
 // bot.start();
-var handle = (0, grammy_1.webhookCallback)(bot, "std/http"); // Создаем обработчик
-function handler(request) {
-    return __awaiter(this, void 0, void 0, function () {
-        var err_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, handle(request)];
-                case 1: 
-                // Вызываем обработчик Grammy с объектом request
-                return [2 /*return*/, _a.sent()];
-                case 2:
-                    err_1 = _a.sent();
-                    console.error(err_1);
-                    return [2 /*return*/, new Response('Internal Server Error', { status: 500 })];
-                case 3: return [2 /*return*/];
-            }
-        });
-    });
-}
+// const handle = webhookCallback(bot, "https"); // <-- Измените эту строку
+exports.default = (0, grammy_1.webhookCallback)(bot, "std/http");
+// export default async function handler(request: Request) {
+//   try {
+//     return await handle(request);
+//   } catch (err) {
+//     console.error(err);
+//     return new Response('Internal Server Error', { status: 500 });
+//   }
+// }
 bot.catch(function (err) {
     var ctx = err.ctx;
     console.error("\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u043E\u0431\u0440\u0430\u0431\u043E\u0442\u043A\u0435 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F ".concat(ctx.update.update_id, ":"));
