@@ -321,7 +321,7 @@ bot.callbackQuery('how_to_order', async (ctx) => {
 
 // bot.start();
 // const handle = webhookCallback(bot, "https"); // <-- Измените эту строку
-export default webhookCallback(bot, "express");
+export default webhookCallback(bot, "http");
 // export default async function handler(request: Request) {
 //   try {
 //     return await handle(request);

@@ -303,7 +303,7 @@ bot.callbackQuery('how_to_order', function (ctx) { return __awaiter(void 0, void
 }); });
 // bot.start();
 // const handle = webhookCallback(bot, "https"); // <-- Измените эту строку
-exports.default = (0, grammy_1.webhookCallback)(bot, "express");
+exports.default = (0, grammy_1.webhookCallback)(bot, "http");
 // export default async function handler(request: Request) {
 //   try {
 //     return await handle(request);
