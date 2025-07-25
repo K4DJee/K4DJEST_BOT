@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const grammy_1 = require("grammy");
 const mail_1 = __importDefault(require("./mail"));
-const dotenv_1 = __importDefault(require("dotenv"));
 const BOT_DEVELOPER = 1367602882;
 const bot = new grammy_1.Bot(process.env.BOT_TOKEN);
 //additional
@@ -285,6 +284,7 @@ bot.callbackQuery('how_to_order', (ctx) => __awaiter(void 0, void 0, void 0, fun
     `, { parse_mode: 'HTML' });
 }));
 // bot.start();
+export default webhookCallback(bot, "vercel");
 bot.catch((err) => {
     const ctx = err.ctx;
     console.error(`Ошибка при обработке обновления ${ctx.update.update_id}:`);
