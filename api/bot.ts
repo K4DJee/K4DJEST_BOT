@@ -317,7 +317,7 @@ bot.callbackQuery('how_to_order', async (ctx) => {
     `, {parse_mode:'HTML'});
 });
 
-bot.start();
+// bot.start();
 
 bot.catch((err) => {
     const ctx = err.ctx;
