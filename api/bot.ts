@@ -1,6 +1,6 @@
 import {Bot, Context, GrammyError, HttpError, InlineKeyboard, Keyboard, webhookCallback } from 'grammy';
 import transporter from './mail';
-import { IncomingMessage, ServerResponse } from 'http';
+import type { Request, Response } from 'express';
 
 const BOT_DEVELOPER = 1367602882;
 const BOT_TOKEN = process.env.BOT_TOKEN!;
@@ -14,9 +14,9 @@ type MyContext = Context & {
     config: BotConfig;
   };
 
-// export const config = {
-//   runtime: "nodejs", // или "nodejs18", "nodejs20" - проверьте поддерживаемые версии в документации Vercel
-// };
+export const config = {
+  runtime: "nodejs", // или "nodejs18", "nodejs20" - проверьте поддерживаемые версии в документации Vercel
+};
 
 if (!BOT_TOKEN) throw new Error("BOT_TOKEN не установлен");
 const bot = new Bot<MyContext>(BOT_TOKEN);
@@ -373,17 +373,19 @@ bot.callbackQuery('how_to_order', async (ctx) => {
 //   }
 // }
 
-const handle = webhookCallback(bot, "http");
+const handle = webhookCallback(bot, "express");
 
-export default async function handler(req: IncomingMessage, res: ServerResponse) {
+export default async function handler(req: Request, res: Response) {
   try {
+    // console.log("Получен запрос:", req.method, req.url); // Для отладки
+    // Передаем объекты req и res напрямую в обработчик Grammy
     await handle(req, res);
+    // console.log("Обработчик Grammy выполнен"); // Для отладки
   } catch (err) {
-    console.error("Error in handler:", err);
-
+    console.error("Ошибка в обработчике Vercel (express adapter):", err);
+    // Отправляем ответ об ошибке, если что-то пошло не так до/во время передачи управления Grammy
     if (!res.headersSent) {
-      res.writeHead(500, { "Content-Type": "text/plain" });
-      res.end("Internal Server Error");
+      res.status(500).send('Internal Server Error');
     }
   }
 }
