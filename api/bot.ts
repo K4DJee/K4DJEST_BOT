@@ -1,6 +1,6 @@
 import {Bot, Context, GrammyError, HttpError, InlineKeyboard, Keyboard, webhookCallback } from 'grammy';
 import transporter from './mail';
-import type { Request, Response } from 'express';
+import { IncomingMessage, ServerResponse } from 'http';
 
 const BOT_DEVELOPER = 1367602882;
 const BOT_TOKEN = process.env.BOT_TOKEN!;
@@ -373,19 +373,27 @@ bot.callbackQuery('how_to_order', async (ctx) => {
 //   }
 // }
 
-const handle = webhookCallback(bot, "express");
+const handle = webhookCallback(bot, "http");
 
-export default async function handler(req: Request, res: Response) {
+// Экспортируем функцию по умолчанию для Vercel
+export default async function handler(req: IncomingMessage, res: ServerResponse) {
   try {
     // console.log("Получен запрос:", req.method, req.url); // Для отладки
-    // Передаем объекты req и res напрямую в обработчик Grammy
+
+    // Вызываем обработчик Grammy с адаптером "http"
+    // Адаптер "http" работает с объектами IncomingMessage и ServerResponse напрямую
     await handle(req, res);
+
     // console.log("Обработчик Grammy выполнен"); // Для отладки
   } catch (err) {
-    console.error("Ошибка в обработчике Vercel (express adapter):", err);
-    // Отправляем ответ об ошибке, если что-то пошло не так до/во время передачи управления Grammy
+    console.error("Ошибка в обработчике Vercel (http adapter):", err);
+
+    // Отправляем ответ об ошибке, если что-то пошло не так
+    // до или во время передачи управления Grammy
     if (!res.headersSent) {
-      res.status(500).send('Internal Server Error');
+      res.statusCode = 500;
+      res.setHeader('Content-Type', 'text/plain');
+      res.end('Internal Server Error');
     }
   }
 }
