@@ -284,7 +284,7 @@ bot.callbackQuery('how_to_order', (ctx) => __awaiter(void 0, void 0, void 0, fun
     `, { parse_mode: 'HTML' });
 }));
 // bot.start();
-export default webhookCallback(bot, "vercel");
+export default webhookCallback(bot, "https");
 bot.catch((err) => {
     const ctx = err.ctx;
     console.error(`Ошибка при обработке обновления ${ctx.update.update_id}:`);

@@ -316,7 +316,7 @@ bot.callbackQuery('how_to_order', async (ctx) => {
 });
 
 // bot.start();
-export default webhookCallback(bot, "vercel");
+export default webhookCallback(bot, "https");
 
 
 bot.catch((err) => {
