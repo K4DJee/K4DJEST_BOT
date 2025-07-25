@@ -284,7 +284,7 @@ bot.callbackQuery('how_to_order', (ctx) => __awaiter(void 0, void 0, void 0, fun
   ⚠️ <b>Важно:</b> Чтобы заявка была принята, вы должны строго следовать примеру!
     `, { parse_mode: 'HTML' });
 }));
-bot.start();
+// bot.start();
 bot.catch((err) => {
     const ctx = err.ctx;
     console.error(`Ошибка при обработке обновления ${ctx.update.update_id}:`);
