@@ -363,7 +363,8 @@ bot.callbackQuery('how_to_order', function (ctx) { return __awaiter(void 0, void
 //     }
 //   }
 // }
-var handle = (0, grammy_1.webhookCallback)(bot, "express");
+var handle = (0, grammy_1.webhookCallback)(bot, "http");
+// Экспортируем функцию по умолчанию для Vercel
 function handler(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var err_2;
@@ -372,19 +373,24 @@ function handler(req, res) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     // console.log("Получен запрос:", req.method, req.url); // Для отладки
-                    // Передаем объекты req и res напрямую в обработчик Grammy
+                    // Вызываем обработчик Grammy с адаптером "http"
+                    // Адаптер "http" работает с объектами IncomingMessage и ServerResponse напрямую
                     return [4 /*yield*/, handle(req, res)];
                 case 1:
                     // console.log("Получен запрос:", req.method, req.url); // Для отладки
-                    // Передаем объекты req и res напрямую в обработчик Grammy
+                    // Вызываем обработчик Grammy с адаптером "http"
+                    // Адаптер "http" работает с объектами IncomingMessage и ServerResponse напрямую
                     _a.sent();
                     return [3 /*break*/, 3];
                 case 2:
                     err_2 = _a.sent();
-                    console.error("Ошибка в обработчике Vercel (express adapter):", err_2);
-                    // Отправляем ответ об ошибке, если что-то пошло не так до/во время передачи управления Grammy
+                    console.error("Ошибка в обработчике Vercel (http adapter):", err_2);
+                    // Отправляем ответ об ошибке, если что-то пошло не так
+                    // до или во время передачи управления Grammy
                     if (!res.headersSent) {
-                        res.status(500).send('Internal Server Error');
+                        res.statusCode = 500;
+                        res.setHeader('Content-Type', 'text/plain');
+                        res.end('Internal Server Error');
                     }
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
