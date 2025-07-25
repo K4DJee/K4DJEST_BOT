@@ -16,7 +16,6 @@ type MyContext = Context & {
   };
 
 const bot = new Bot<MyContext>(process.env.BOT_TOKEN!);
-export default webhookCallback(bot, "https");
 
 
 //additional
@@ -318,6 +317,8 @@ bot.callbackQuery('how_to_order', async (ctx) => {
 });
 
 // bot.start();
+export default webhookCallback(bot, 'https');
+
 
 bot.catch((err) => {
     const ctx = err.ctx;
