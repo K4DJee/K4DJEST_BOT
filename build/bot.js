@@ -43,7 +43,7 @@ var mail_1 = require("./mail");
 var BOT_DEVELOPER = 1367602882;
 var BOT_TOKEN = process.env.BOT_TOKEN;
 exports.config = {
-    runtime: "nodejs22", // или "nodejs18", "nodejs20" - проверьте поддерживаемые версии в документации Vercel
+    runtime: "nodejs", // или "nodejs18", "nodejs20" - проверьте поддерживаемые версии в документации Vercel
 };
 if (!BOT_TOKEN)
     throw new Error("BOT_TOKEN не установлен");
