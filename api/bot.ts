@@ -14,9 +14,9 @@ type MyContext = Context & {
     config: BotConfig;
   };
 
-export const config = {
-  runtime: "nodejs", // или "nodejs18", "nodejs20" - проверьте поддерживаемые версии в документации Vercel
-};
+// export const config = {
+//   runtime: "nodejs", // или "nodejs18", "nodejs20" - проверьте поддерживаемые версии в документации Vercel
+// };
 
 if (!BOT_TOKEN) throw new Error("BOT_TOKEN не установлен");
 const bot = new Bot<MyContext>(BOT_TOKEN);
@@ -321,7 +321,7 @@ bot.callbackQuery('how_to_order', async (ctx) => {
 
 // bot.start();
 // const handle = webhookCallback(bot, "https"); // <-- Измените эту строку
-export default webhookCallback(bot, "http");
+export default webhookCallback(bot, "express");
 // export default async function handler(request: Request) {
 //   try {
 //     return await handle(request);

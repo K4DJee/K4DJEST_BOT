@@ -36,14 +36,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.config = void 0;
 var grammy_1 = require("grammy");
 var mail_1 = require("./mail");
 var BOT_DEVELOPER = 1367602882;
 var BOT_TOKEN = process.env.BOT_TOKEN;
-exports.config = {
-    runtime: "nodejs", // или "nodejs18", "nodejs20" - проверьте поддерживаемые версии в документации Vercel
-};
+// export const config = {
+//   runtime: "nodejs", // или "nodejs18", "nodejs20" - проверьте поддерживаемые версии в документации Vercel
+// };
 if (!BOT_TOKEN)
     throw new Error("BOT_TOKEN не установлен");
 var bot = new grammy_1.Bot(BOT_TOKEN);
@@ -303,7 +302,7 @@ bot.callbackQuery('how_to_order', function (ctx) { return __awaiter(void 0, void
 }); });
 // bot.start();
 // const handle = webhookCallback(bot, "https"); // <-- Измените эту строку
-exports.default = (0, grammy_1.webhookCallback)(bot, "http");
+exports.default = (0, grammy_1.webhookCallback)(bot, "express");
 // export default async function handler(request: Request) {
 //   try {
 //     return await handle(request);
