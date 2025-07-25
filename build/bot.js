@@ -36,14 +36,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.config = void 0;
 exports.default = handler;
 var grammy_1 = require("grammy");
 var mail_1 = require("./mail");
 var BOT_DEVELOPER = 1367602882;
 var BOT_TOKEN = process.env.BOT_TOKEN;
-// export const config = {
-//   runtime: "nodejs", // или "nodejs18", "nodejs20" - проверьте поддерживаемые версии в документации Vercel
-// };
+exports.config = {
+    runtime: "nodejs", // или "nodejs18", "nodejs20" - проверьте поддерживаемые версии в документации Vercel
+};
 if (!BOT_TOKEN)
     throw new Error("BOT_TOKEN не установлен");
 var bot = new grammy_1.Bot(BOT_TOKEN);
@@ -304,26 +305,50 @@ bot.callbackQuery('how_to_order', function (ctx) { return __awaiter(void 0, void
 // bot.start();
 // const handle = webhookCallback(bot, "https"); // <-- Измените эту строку
 // export default webhookCallback(bot, "express");
+// export default async function handler(req: any, res: any) {
+//   // req и res приходят напрямую от Vercel Serverless Function
+//   try {
+//     // console.log("Получен запрос:", req.method, req.url); // Для отладки
+//     // Получаем обработчик webhook с адаптером "express"
+//     const handlerFunction = webhookCallback(bot, "express");
+//     // Передаем объекты req и res напрямую в обработчик Grammy
+//     await handlerFunction(req, res);
+//     // console.log("Обработчик Grammy выполнен"); // Для отладки
+//   } catch (err) {
+//     console.error("Ошибка в обработчике Vercel:", err);
+//     // Отправляем ответ об ошибке, если что-то пошло не так до передачи управления Grammy
+//     if (!res.headersSent) {
+//       res.status(500).send('Internal Server Error');
+//     }
+//   }
+// }
+var handle = (0, grammy_1.webhookCallback)(bot, "http");
 function handler(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var handlerFunction, err_1;
+        var err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    handlerFunction = (0, grammy_1.webhookCallback)(bot, "express");
-                    // Передаем объекты req и res напрямую в обработчик Grammy
-                    return [4 /*yield*/, handlerFunction(req, res)];
+                    // console.log("Получен запрос:", req.method, req.url); // Для отладки
+                    // Вызываем обработчик Grammy с адаптером "http"
+                    // Адаптер "http" работает с объектами IncomingMessage и ServerResponse напрямую
+                    return [4 /*yield*/, handle(req, res)];
                 case 1:
-                    // Передаем объекты req и res напрямую в обработчик Grammy
+                    // console.log("Получен запрос:", req.method, req.url); // Для отладки
+                    // Вызываем обработчик Grammy с адаптером "http"
+                    // Адаптер "http" работает с объектами IncomingMessage и ServerResponse напрямую
                     _a.sent();
                     return [3 /*break*/, 3];
                 case 2:
                     err_1 = _a.sent();
-                    console.error("Ошибка в обработчике Vercel:", err_1);
-                    // Отправляем ответ об ошибке, если что-то пошло не так до передачи управления Grammy
+                    console.error("Ошибка в обработчике Vercel (http adapter):", err_1);
+                    // Отправляем ответ об ошибке, если что-то пошло не так до/во время передачи управления Grammy
                     if (!res.headersSent) {
-                        res.status(500).send('Internal Server Error');
+                        // @ts-ignore - writeHead и end доступны в ServerResponse
+                        res.writeHead(500, { 'Content-Type': 'text/plain' });
+                        // @ts-ignore
+                        res.end('Internal Server Error');
                     }
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
