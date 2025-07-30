@@ -1,5 +1,6 @@
 import {Bot, Context, GrammyError, HttpError, InlineKeyboard, Keyboard, webhookCallback } from 'grammy';
 import transporter from './mail';
+import * as http from 'http';
 import { IncomingMessage, ServerResponse } from 'http';
 
 const BOT_DEVELOPER = 1367602882;
@@ -88,6 +89,18 @@ function validateApplication(text:string):boolean{
 
 return true;
 }
+
+const date = new Date();
+
+const options2: Intl.DateTimeFormatOptions = {
+  month: 'long' as const,
+  day: 'numeric' as const,
+  hour: 'numeric' as const,
+  minute: 'numeric' as const,
+  second: 'numeric' as const,
+  timeZone: 'UTC'
+};
+
   //middlewares
 bot.use(async(ctx,next)=>{
   ctx.config = {
@@ -332,82 +345,43 @@ bot.callbackQuery('how_to_order', async (ctx) => {
 });
 
 // bot.start();
-// const handle = webhookCallback(bot, "https"); // <-- Измените эту строку
-// export default webhookCallback(bot, "express");
+bot.api.getWebhookInfo().then(info => console.log(info));
 
-// export default async function handler(req: any, res: any) {
-//   // req и res приходят напрямую от Vercel Serverless Function
-//   try {
-//     // console.log("Получен запрос:", req.method, req.url); // Для отладки
-//     // Получаем обработчик webhook с адаптером "express"
-//     const handlerFunction = webhookCallback(bot, "express");
-//     // Передаем объекты req и res напрямую в обработчик Grammy
-//     await handlerFunction(req, res);
-//     // console.log("Обработчик Grammy выполнен"); // Для отладки
-//   } catch (err) {
-//     console.error("Ошибка в обработчике Vercel:", err);
-//     // Отправляем ответ об ошибке, если что-то пошло не так до передачи управления Grammy
-//     if (!res.headersSent) {
-//       res.status(500).send('Internal Server Error');
-//     }
-//   }
-// }
+const handle = webhookCallback(bot, "http", { secretToken: undefined });
+const server = http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
+  console.log('Запрос получен:', req.url);
 
-// const handle = webhookCallback(bot, "http");
-// export default async function handler(req: IncomingMessage, res: ServerResponse) {
-//   try {
-//     // console.log("Получен запрос:", req.method, req.url); // Для отладки
-//     // Вызываем обработчик Grammy с адаптером "http"
-//     // Адаптер "http" работает с объектами IncomingMessage и ServerResponse напрямую
-//     await handle(req, res);
-//     // console.log("Обработчик Grammy выполнен"); // Для отладки
-//   } catch (err) {
-//     console.error("Ошибка в обработчике Vercel (http adapter):", err);
-//     // Отправляем ответ об ошибке, если что-то пошло не так до/во время передачи управления Grammy
-//     if (!res.headersSent) {
-//       // @ts-ignore - writeHead и end доступны в ServerResponse
-//       res.writeHead(500, { 'Content-Type': 'text/plain' });
-//       // @ts-ignore
-//       res.end('Internal Server Error');
-//     }
-//   }
-// }
-
-const handle = webhookCallback(bot, "http");
-
-// Экспортируем функцию по умолчанию для Vercel
-export default async function handler(req: IncomingMessage, res: ServerResponse) {
-  try {
-    // console.log("Получен запрос:", req.method, req.url); // Для отладки
-
-    // Вызываем обработчик Grammy с адаптером "http"
-    // Адаптер "http" работает с объектами IncomingMessage и ServerResponse напрямую
-    await handle(req, res);
-
-    // console.log("Обработчик Grammy выполнен"); // Для отладки
-  } catch (err) {
-    console.error("Ошибка в обработчике Vercel (http adapter):", err);
-
-    // Отправляем ответ об ошибке, если что-то пошло не так
-    // до или во время передачи управления Grammy
-    if (!res.headersSent) {
-      res.statusCode = 500;
-      res.setHeader('Content-Type', 'text/plain');
-      res.end('Internal Server Error');
+  // Проверяем, является ли запрос вебхуком от Telegram (например, POST на /)
+  // Убедитесь, что путь соответствует тому, который вы указали в setWebhook
+  if (req.method === 'POST' && req.url === '/') { // Или другой путь, если вы его меняли
+    try {
+      // Передаем оригинальный req и res в handle
+      // handle внутри будет слушать события 'data', 'end' и парсить тело
+      await handle(req, res);
+    } catch (err) {
+      console.error("Ошибка при обработке вебхука через Grammy:", err);
+      if (!res.headersSent) {
+        res.statusCode = 500;
+        res.setHeader('Content-Type', 'text/plain');
+        res.end('Ошибка обработки вебхука Grammy');
+      }
     }
+  } else {
+    // Обработка других путей (например, GET / для проверки работы сервера)
+    console.log(`Запрошен неизвестный путь: ${req.method} ${req.url}`);
+    res.statusCode = 404;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Not Found');
   }
-}
+});
 
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
-// export default async function handler(request: Request) {
-//   try {
-//     return await handle(request);
-//   } catch (err) {
-//     console.error(err);
-//     return new Response('Internal Server Error', { status: 500 });
-//   }
-// }
-
+server.listen(PORT, '0.0.0.0', () => { // Слушаем на всех интерфейсах (0.0.0.0) для Docker
+  console.log(`✅ Бот запущен и слушает вебхуки на порту ${PORT}`);
+  console.log(date.toLocaleDateString("ru",options2));
+  // Не вызываем bot.api.setWebhook здесь. Это делается вручную один раз после деплоя.
+});
 
 bot.catch((err) => {
     const ctx = err.ctx;
